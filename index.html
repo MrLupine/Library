@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Test</title>
+	<meta name="description" content="TEst">
+	<meta name="author" content="SitePoint">
+	<link rel="stylesheet" href="css/styles.css">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="main-container">
+		<div class="dropdowns hidden" id="dropdowns">
+			<!-- <select>
+				<option>Display</option>
+				<option>Grid</option>
+				<option>List</option>
+			</select> -->
+			<select id="sortList">
+				<option>sort</option>
+				<option>title</option>
+				<option>authors</option>
+				<option>page Count</option>
+				<option>read</option>
+				<option>rating</option>
+			</select>
+			<div class="checkbox-container">
+				<input type="checkbox" id="hideRead" class="hide-read">
+				<p class="checkbox-text">Hide Read Books</p>
+				<div class="fake-checkbox"></div>
+				<label for="hideRead" class="hide-read-label"></label>
+			</div>
+		</div>
+		<div class="library-grid" id="libraryGrid">
+			<button class="library-grid__add-book" id="addBook">
+				<svg id="add-book-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 85 120"><title>add-book</title><polygon points="58.2 58.5 44 58.5 44 44.3 41 44.3 41 58.5 26.8 58.5 26.8 61.5 41 61.5 41 75.7 44 75.7 44 61.5 58.2 61.5 58.2 58.5"/><polygon points="55.5 2 83 2 83 29.6 85 29.6 85 0 55.5 0 55.5 2"/><polygon points="2 29.6 2 2 28.7 2 28.7 0 0 0 0 29.6 2 29.6"/><polygon points="28.7 118 2 118 2 87.9 0 87.9 0 120 28.7 120 28.7 118"/><polygon points="83 87.9 83 118 55.5 118 55.5 120 85 120 85 87.9 83 87.9"/></svg>
+			</button>
+		</div>
+		<button class="login-signup-button" id="loginSignUpButton">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46.32 31.4"><title>login-signup</title><polygon points="31.4 14.2 17.2 14.2 17.2 0 14.2 0 14.2 14.2 0 14.2 0 17.2 14.2 17.2 14.2 31.4 17.2 31.4 17.2 17.2 31.4 17.2 31.4 14.2"/><polygon points="40.92 15.7 23.52 2.5 25.12 0.7 46.32 15.7 25.12 30.7 23.72 28.7 40.92 15.7"/></svg>
+		</button>
+	</div>
+	<div class="modal search-bar hidden" id="searchBar">
+		<div class="modal__search">
+			<input class="modal__search-input" id="searchInput" placeholder="Search for a Title, Author or ISBN">
+			<button class="modal__search-button" id="searchButton"></button>
+		</div>
+		<button class="modal__close-button" id="closeSearch">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.96 25"><title>close-button 2</title><polygon points="24.96 2.44 22.56 0.04 12.5 10.1 2.4 0 0 2.4 10.1 12.5 0 22.59 2.4 25 12.5 14.9 22.56 24.96 24.96 22.56 14.9 12.5 24.96 2.44" style="fill:#B4B4B4"/></svg>
+		</button>
+		<div class="modal__search-results">
+			<ul id="search-results">
+
+			</ul>
+		</div>
+	</div>
+	<div class="modal login-signup hidden" id="loginSignUp">
+		<form class="signup" id="signUp" action="we need to send this to the server here">
+			<p class="login-signup-info">Sign up to save your library!</p>
+			<div class="form-item">
+				<label class="label-title" for="userName">Username</label>
+				<input type="text" class="login-signup__username" id="userName" name="userName" pattern="[A-Za-z0-9]{6,15}" required>
+				<label class="subtext" for="userName">6-15 characters, no special characters allowed</label>
+			</div>
+			<div class="form-item">
+				<label class="label-title" for="email">Email</label>
+				<input type="text" class="login-signup__email" id="email" name="email" required>
+			</div>
+			<div class="form-item">
+				<label class="label-title" for="password">Password</label>
+				<input type="password" class="login-signup__password" id="password" name="password" pattern="(.*[a-z].*)(.*[A-Z].*)(.*\d.*)" required>
+				<label class="subtext" for="password">Minimum 8 characters, at least 1 capital letter and number</label>
+			</div>
+			<div class="form-item">
+				<label class="label-title" for="confirmPassword">Confirm Password</label>
+				<input type="password" class="login-signup__password" id="confirmPassword" name="password" minlength="8" required>
+			</div>
+			<input type="submit" value="Sign Up" class="submit">
+			<a class="switchForm" href="#">
+				<p>Already a member? Click here to login.</p>
+			</a>
+		</form>
+		<form class="login hidden" id="logIn" action="this is for login credentials">
+			<p class="login-signup-info">Enter your login details below</p>
+			<div class="form-item">
+				<label class="label-title" for="userName">Username</label>
+				<input type="text" class="login-signup__username" id="userName" name="userName" required>
+			</div>
+			<div class="form-item">
+				<label class="label-title" for="password">Password</label>
+				<input type="password" class="login-signup__password" id="password" name="password" minlength="8" required>
+			</div>
+			<input type="submit" value="Log In" class="submit">
+			<a class="switchForm" href="#">
+				<p>Not a member? Click here to sign up.</p>
+			</a>
+		</form>
+		<button class="modal__close-button" id="closeLoginSignUp">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.96 25"><title>close-button 2</title><polygon points="24.96 2.44 22.56 0.04 12.5 10.1 2.4 0 0 2.4 10.1 12.5 0 22.59 2.4 25 12.5 14.9 22.56 24.96 24.96 22.56 14.9 12.5 24.96 2.44" style="fill:#B4B4B4"/></svg>
+		</button>
+	</div>
+	<div class="modal-overlay hidden" id="modal-overlay">	
+	</div>
+<script src="js/config.js"></script>
+<script src="js/scripts.js"></script>
+</body>
+</html>
