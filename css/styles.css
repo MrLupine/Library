@@ -2,6 +2,10 @@
     letter-spacing: .5px
 }
 
+body {
+    background: white;
+}
+
 *:not(select) {
     margin: 0;
     padding: 0;
@@ -19,12 +23,35 @@
 }
 
 .dropdowns {
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     width: 85vw;
     height: 0;
     transition: opacity .25s;
+}
+
+.reverse-array {
+    fill: lightgrey;
+    height: 10px;
+    width: 10px;
+    background: none;
+    outline: transparent;
+    border: none;
+    transition: transform 1s;
+    cursor: pointer;
+}
+
+.reverse-array > * {
+    pointer-events: none;
+}
+
+.reverse-array:hover {
+    fill: rgb(160, 160, 160);
+}
+
+.reverse-array.flipped {
+    transform: rotate3d(1, 0, 0, 180deg);
 }
 
 select {
@@ -190,7 +217,7 @@ select > * {
     position: absolute;
     display: grid;
     grid-template:
-        [title-start] "title title" 2.5fr [title-end]
+        [title-start] "title title" 3fr [title-end]
         [authors-start] "authors authors" 40px[authors-end]
         [pageCount-start] "pageCount read" 55px[pagecCount-end]
         [myRating-start] "myRating myRating" 2fr[myRating-end]/1fr 1fr;
@@ -315,7 +342,7 @@ select > * {
 
 .library-book__back--rating {
     grid-area: myRating;
-    padding: 17px 18px 0 17px;
+    padding: 10px 18px 0 17px;
 }
 
 fieldset {
@@ -421,10 +448,6 @@ fieldset {
     height: 40px;
     transition: top .25s cubic-bezier(0.2, 0.5, 0.4, 1);
     padding: 6px 10px;
-}
-
-.login-signup {
-    width: clamp(400px, 60vw, 500px);
 }
 
 .modal:focus-within {
@@ -600,21 +623,34 @@ fieldset {
     align-self: flex-start;
 }
 
-.signup, .login {
+/*.signup, .login {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     margin: 40px 0 35px 0;
-    width: 75%;
+    width: 350px;
+}
+
+.signup > input:valid {
+    box-shadow: 0 0 2px 1px rgb(135, 255, 0) inset;
+}
+
+.signup > input:invalid {
+    box-shadow: 0 0 2px 1px rgb(255, 10, 0) inset;
 }
 
 .form-item {
     margin-bottom: 7px;
-    width: 100%;
+    width: 100%;    
+}*/
+
+.login-signup {
+    padding: 10px 20px 15px;
 }
 
-.login-signup input:not([type="submit"]) {
+/*
+.signup, .login input:not([type="submit"]) {
     width: 100%;
     height: 30px;
     border-radius: 5px;
@@ -646,7 +682,13 @@ fieldset {
     padding-bottom: 15px;
     font-weight: 500;
 }
-
+*/
+.signup-title {
+    font-size: 21px;
+    font-weight: 300;
+    padding: 10px 0 15px;
+}
+/*
 .login-signup label {
     display: block;
     padding-left: 2px;
@@ -678,8 +720,90 @@ fieldset {
     font-size: 10px;
     color: rgb(170, 170, 170);
     padding-top: 3px;
+}*/
+
+.user-info {
+    height: 45px;
+    font-size: 16px;
+    font-weight: 300;
+    color: grey;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 2px 7px;
+    margin: 2px 5px;
+    position: absolute;
+    outline: transparent;
+    border: none;
+    top: 7px;
+    right: 5px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-form.hidden {
+.user-info:hover {
+    background: rgb(240, 240, 240);
+}
+
+.user-info > * {
+    pointer-events: none;
+}
+
+.user-info p {
+    padding-right: 10px;
+}
+
+@media screen and (max-width: 700px) {
+  .user-info {
+    width: 48px
+  }
+
+  .user-info p {
+    display: none
+  }
+}
+
+.user-id-picture {
+    background: none;
+    background-size:contain;
+    border: none;
+    outline: transparent;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border-radius: 20px;
+    box-shadow: 0 0 4px 0px rgb(190, 190, 190);
+}
+
+.user-id-signout {
+    position: absolute;
+    opacity: 1;
+    top: 60px;
+    right: 20px;
+    width: 90px;
+    height: 25px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    background-color: rgb(154, 155, 156);
+    font-weight: 300;
+    letter-spacing: 1px;
+    box-shadow: 0 0 3px 1px rgb(230, 230, 230);
+    outline: transparent;
+    transition: opacity 0.25s;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.user-id-signout:hover {
+    background-color: rgb(200, 200, 200)
+}
+
+.hiddenSignOut {
+    opacity: 0;
+}
+
+.hidden {
     display: none;
 }
