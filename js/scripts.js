@@ -1,15 +1,24 @@
 class Book {
-	constructor(title, authors, pageCount, averageRating, read, image){
+	constructor(title, authors, pageCount, averageRating, read, image, id, dateAdded){
 		this.title = title;
 		this.authors = authors;
 		this.pageCount = pageCount;
 		this.rating = averageRating;
 		this.read = read;
 		this.image = image;
+		this.id = id;
+		this.dateAdded = dateAdded;
 	}
 }
 
 const append = (parent, el) => parent.appendChild(el);
+const checkRepeat = x => {
+	for (book of myLibrary) {
+		if (book.id === x) {
+			return true
+		}
+	}
+}
 const compare = type => (a,b) => (a[type] > b[type]) ? 1 : (b[type] > a[type]) ? -1 : 0;
 const createNode = element => document.createElement(element);
 const deleteChildren = x => {
@@ -37,7 +46,7 @@ const render = book => {
 	const gridContainer = document.getElementById("libraryGrid");
 	const gridRow = document.createElement("div");
 	const user = firebase.auth().currentUser
-	const dbRefObject = firebase.database().ref(`users/${user.uid}/${myLibrary.indexOf(book)}`)
+	const dbRefObject = firebase.database().ref(`users/${user.uid}/${book.id}`)
 	gridRow.classList.add("library-local-perspective");
 	gridRow.innerHTML = 
    `<div class="library-book">
@@ -85,7 +94,7 @@ const render = book => {
 	document.getElementById(`deleteButton${myLibrary.indexOf(book)}`).addEventListener("click", (e) => {
 		myLibrary.splice(e.target.dataset.type, 1);
 		if (user) {
-			dbRefObject.set(myLibrary);
+			dbRefObject.remove()
 		}
 		renderLibrary()
 	})
@@ -134,42 +143,55 @@ const buttonFunctionsMap = {
 			fetch(`https://www.googleapis.com/books/v1/volumes?q=${search}&key=${config}`)
 				.then(response => response.json())
 				.then(data => {
-					data.items.map(book => {
+					for (let i = 0; i < data.items.length; i++) {
 						let li = createNode("li"),
 						   img = createNode("img"),
-						     p = createNode("p");
+						     p = createNode("p"),
+						   div = createNode("div");
 						   
-						img.src = `${ifImageBlankThumbnail(book.volumeInfo.imageLinks)}`;
-						p.innerHTML = `<div class="search-item__info--title">${ifBlank(book.volumeInfo.title)}</div><div class="search-item__info--authors">${ifAuthorBlank(book.volumeInfo.authors)}</div>`;
+						img.src = `${ifImageBlankThumbnail(data.items[i].volumeInfo.imageLinks)}`;
+						p.innerHTML = `<div class="search-item__info--title">${ifBlank(data.items[i].volumeInfo.title)}</div><div class="search-item__info--authors">${ifAuthorBlank(data.items[i].volumeInfo.authors)}</div>`;
 						li.classList = "search-item";
 						img.classList = "search-item__image";
 						p.classList = "search-item__info";
+						div.classList = "error-message invisible";
+						div.setAttribute("id", `errorMessage${i}`)
+						div.innerHTML = "You&rsquo;ve already added this book!"
 						li.addEventListener("click", (e) => {
-							fetch(`https://www.googleapis.com/books/v1/volumes/${book.id}?key=${config}`)
+							fetch(`https://www.googleapis.com/books/v1/volumes/${data.items[i].id}?key=${config}`)
 								.then(response => response.json())
 								.then(data => {
-									myLibrary
+									if (!checkRepeat(data.id)) {
+										myLibrary
 									 .push(new Book(
 											ifBlank(data.volumeInfo.title), 
 											ifAuthorBlank(data.volumeInfo.authors), 
 											ifBlank(data.volumeInfo.pageCount), 
 											ifRatingBlank(data.volumeInfo.averageRating), 
 											false, 
-											ifImageBlankFullSize(data.volumeInfo.imageLinks)));
-									render(myLibrary[myLibrary.length - 1]);
-									hideOptions()
-									const user = firebase.auth().currentUser
-									const dbRefObject = firebase.database().ref('users/' + user.uid)
-									if (user) {
-										dbRefObject.set(myLibrary[myLibrary.length - 1]);
+											ifImageBlankFullSize(data.volumeInfo.imageLinks),
+											data.id,
+											Date.now()));
+										render(myLibrary[myLibrary.length - 1]);
+										hideOptions()
+										const user = firebase.auth().currentUser
+										const dbRefObject = firebase.database().ref('users/' + user.uid + `/${data.id}`)
+										if (user) {
+											dbRefObject.set(myLibrary[myLibrary.length - 1]);
+										}
+									} else {
+										const timeout = () => document.getElementById(`errorMessage${i}`).classList.toggle("invisible")
+										timeout()
+										setTimeout(timeout, 2000)
 									}
 							})
 						})
 						append(li, img);
-						append(li, p);
+						append(li, p)
+						append(li, div);
 						append(ul, li);
-						})
-					})
+					}
+				})
 		}
 	},
 	loginSignUpButton: () => {
@@ -246,7 +268,7 @@ document.getElementById("sortList").addEventListener("change", (e) => {
 	}
   myLibrary.sort(compare(sortValue(e.target.value)));
   renderLibrary();
-}) 
+})
 
 /*document.getElementById("signupConfirmPassword").addEventListener("focusout", (e) => {
 	if (e.value !== document.getElementById("signupPassword").value) {
@@ -295,7 +317,7 @@ window.addEventListener("load", () => {
     	const dbRefObject = firebase.database().ref('users/' + user.uid)
     	dbRefObject.once("value", snap => {
     		if (snap.val()) {
-    			myLibrary = (snap.val())
+    			myLibrary = Object.values(snap.val())
     			renderLibrary()
     		}
     	})

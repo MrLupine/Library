@@ -623,6 +623,27 @@ fieldset {
     align-self: flex-start;
 }
 
+.error-message {
+    position: absolute;
+    height: 100px;
+    width: 100%;
+    right: 0px;
+    background-color: rgba(245, 99, 14, 0.98);
+    color: white;
+    font-size: 22px;
+    font-weight: 500;
+    opacity: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px #d06139 inset;
+    transition: opacity 0.5s;
+}
+
+.invisible {
+    opacity: 0;
+}
+
 /*.signup, .login {
     display: flex;
     flex-direction: column;
@@ -726,6 +747,7 @@ fieldset {
     height: 45px;
     font-size: 16px;
     font-weight: 300;
+    background: transparent;
     color: grey;
     display: flex;
     justify-content: flex-end;
