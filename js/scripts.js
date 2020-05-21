@@ -46,7 +46,6 @@ const render = book => {
 	const gridContainer = document.getElementById("libraryGrid");
 	const gridRow = document.createElement("div");
 	const user = firebase.auth().currentUser
-	const dbRefObject = firebase.database().ref(`users/${user.uid}/${book.id}`)
 	gridRow.classList.add("library-local-perspective");
 	gridRow.innerHTML = 
    `<div class="library-book">
@@ -78,6 +77,7 @@ const render = book => {
 		button.addEventListener("change", (e) => {
 			book.rating = Number(e.target.value);
 			if (user) {
+				const dbRefObject = firebase.database().ref(`users/${user.uid}/${book.id}`)
 				dbRefObject.update({rating: book.rating});
 			}
 	  	})
@@ -88,12 +88,14 @@ const render = book => {
 		book.read = document.getElementById(e.target.id).checked;
 		readCheck(book)
 		if (user) {
+			const dbRefObject = firebase.database().ref(`users/${user.uid}/${book.id}`)
 			dbRefObject.update({read: book.read});
 		}
 	})
 	document.getElementById(`deleteButton${myLibrary.indexOf(book)}`).addEventListener("click", (e) => {
 		myLibrary.splice(e.target.dataset.type, 1);
 		if (user) {
+			const dbRefObject = firebase.database().ref(`users/${user.uid}/${book.id}`)
 			dbRefObject.remove()
 		}
 		renderLibrary()
@@ -175,8 +177,8 @@ const buttonFunctionsMap = {
 										render(myLibrary[myLibrary.length - 1]);
 										hideOptions()
 										const user = firebase.auth().currentUser
-										const dbRefObject = firebase.database().ref('users/' + user.uid + `/${data.id}`)
 										if (user) {
+											const dbRefObject = firebase.database().ref('users/' + user.uid + `/${data.id}`)
 											dbRefObject.set(myLibrary[myLibrary.length - 1]);
 										}
 									} else {
